@@ -35,6 +35,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.stargyu.sunshine.MainActivity"/>
         </activity>
+
+        <provider
+            android:name=".data.WeatherProvider"
+            android:authorities="me.stargyu.sunshine.app"/>
     </application>
 
 </manifest>

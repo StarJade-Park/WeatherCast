@@ -1,25 +1,30 @@
 package me.stargyu.sunshine.data;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.format.Time;
 
-// 컨트렉트만 했음
-public class WeatherContract {
 
-    public static long normalizeDate(long startDate) { // db 날짜 저장할 때 많이 씀
+public class WeatherContract {
+    // uri 관련 정보
+    public static final String CONTENT_AUTHORITY = "me.stargyu.sunshine.app";
+
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    // 테이블
+    public static final String PATH_WEATHER = "weather";
+    public static final String PATH_LOCATION = "location";
+
+    public static long normalizeDate(long startDate) {
         Time time = new Time();
         time.set(startDate);
         int julianDay = Time.getJulianDay(startDate, time.gmtoff);
         return time.setJulianDay(julianDay);
     }
 
-    public static final class LocationEntry implements BaseColumns { // 기본 컬럼 가져옴
-        // LocationEntry table, 공통되게 의미 부여
-        // 글자들의 나열, 컬럼/스키마 설정
-        // 스키마를 알아야 db에 접근할 수 있다
-        // 계약/약속, 어떤 데이터를 저장할 것이다.
-        // 스키마 선언과 같다. 엔트리-속성(스키마 내용)
-
+    public static final class LocationEntry implements BaseColumns {
         public static final String TABLE_NAME = "location";
 
         public static final String COLUMN_LOCATION_SETTING = "location_setting";
@@ -28,10 +33,21 @@ public class WeatherContract {
 
         public static final String COLUMN_COORD_LAT = "coord_lat";
         public static final String COLUMN_COORD_LONG = "coord_long";
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOCATION).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOCATION;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOCATION;
+
+        public static Uri buildLocationUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 
     public static final class WeatherEntry implements BaseColumns {
-
         public static final String TABLE_NAME = "weather";
 
         public static final String COLUMN_LOC_KEY = "location_id";
@@ -50,5 +66,53 @@ public class WeatherContract {
         public static final String COLUMN_WIND_SPEED = "wind";
 
         public static final String COLUMN_DEGREES = "degrees";
+
+        // uri는 기본적으로 고정형
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_WEATHER).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_WEATHER;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_WEATHER;
+
+        // encoding
+        public static Uri buildWeatherUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildWeatherLocation(String locationSetting) {
+            // 완성할 것 02.02 실습 1
+            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
+        }
+
+        public static Uri buildWeatherLocationWithStartDate(
+                String locationSetting, long startDate) {
+            long normalizedDate = normalizeDate(startDate);
+            return CONTENT_URI.buildUpon().appendPath(locationSetting)
+                    .appendQueryParameter(COLUMN_DATE, Long.toString(normalizedDate)).build();
+        }
+
+        public static Uri buildWeatherLocationWithDate(String locationSetting, long date) {
+            return CONTENT_URI.buildUpon().appendPath(locationSetting)
+                    .appendPath(Long.toString(normalizeDate(date))).build();
+        }
+
+        // decoding
+        public static String getLocationSettingFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static long getDateFromUri(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(2));
+        }
+
+        public static long getStartDateFromUri(Uri uri) {
+            String dateString = uri.getQueryParameter(COLUMN_DATE);
+            if (null != dateString && dateString.length() > 0)
+                return Long.parseLong(dateString);
+            else
+                return 0;
+        }
     }
 }
