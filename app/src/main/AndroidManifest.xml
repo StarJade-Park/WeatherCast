@@ -29,7 +29,7 @@
                 android:value="me.stargyu.sunshine.MainActivity"/>
         </activity>
         <activity
-            android:name=".SettingsActtivity"
+            android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

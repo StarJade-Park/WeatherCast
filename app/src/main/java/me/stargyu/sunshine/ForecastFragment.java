@@ -80,7 +80,7 @@ public class ForecastFragment extends Fragment {
                 new ArrayList<String>()
         );
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false); // 붙이다
         ListView listView = (ListView) rootView.findViewById(R.id.list_view_forecast); //
         listView.setAdapter(mForecastAdapter);
 
@@ -130,7 +130,7 @@ public class ForecastFragment extends Fragment {
         private String formatHighLows(double high, double low) {
             SharedPreferences sharedPreferences =
                     PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String unitType = sharedPreferences.getString(
+            String unitType = sharedPreferences.getString( //
                     getString(R.string.pref_units_key),
                     getString(R.string.pref_units_metric));
 
@@ -193,9 +193,9 @@ public class ForecastFragment extends Fragment {
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
-            for (String s : resultStrs) {
+//            for (String s : resultStrs) {
 //                Log.v(LOG_TAG, "Forecast entry: " + s);
-            }
+//            }
             return resultStrs;
         }
 
