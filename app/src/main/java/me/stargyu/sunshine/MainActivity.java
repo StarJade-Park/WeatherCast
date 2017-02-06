@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        if(id == R.id.action_map) {
+        if (id == R.id.action_map) {
             openPreferredLocationInMap();
             return true;
         }
@@ -67,9 +67,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
 
-        String location = sharedPreferences.getString(
-                getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
+        String location = Utility.getPreferredLocation(this);
 
         Uri geoLocation = Uri.parse("geo:0,0?").buildUpon() //geo:0,0? = action
                 .appendQueryParameter("q", location) // 쿼리
@@ -78,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_VIEW); // 행동만
         intent.setData(geoLocation);
 
-        if(intent.resolveActivity(getPackageManager()) != null){ // 행동할 액티비티(앱)가 있나?
+        if (intent.resolveActivity(getPackageManager()) != null) { // 행동할 액티비티(앱)가 있나?
             startActivity(intent);
-        }else {
+        } else {
             Log.d(LOG_TAG, "Couldn't call" + location + ", no receiving apps installed!");
         }
     }
