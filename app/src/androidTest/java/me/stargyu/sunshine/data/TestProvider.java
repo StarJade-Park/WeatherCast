@@ -118,7 +118,6 @@ public class TestProvider extends AndroidTestCase {
                 LocationEntry.CONTENT_TYPE, type);
     }
 
-
     public void testBasicWeatherQuery() {
         // insert our test records into the database
         WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);

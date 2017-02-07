@@ -1,6 +1,8 @@
 package me.stargyu.sunshine;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -14,6 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import me.stargyu.sunshine.data.WeatherContract;
+import me.stargyu.sunshine.data.WeatherDbHelper;
 
 import static me.stargyu.sunshine.R.id.container;
 
@@ -51,7 +56,8 @@ public class DetailActivity extends AppCompatActivity {
     public static class DetailFragment extends Fragment {
         private static final String LOG_TAG = DetailFragment.class.getSimpleName();
         private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
-        private String mForecastStr;
+        private Uri mForecastUri;
+        private ForecastAdapter mForecastAdapter;
 
         public DetailFragment() { // 정적(static)이라서 onCreate가 필요 없다. ***
             setHasOptionsMenu(true);
@@ -83,9 +89,35 @@ public class DetailActivity extends AppCompatActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) { // 컨트렉트와 비교해보며 볼 것
-                mForecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.detail_text)).setText(mForecastStr);
+
+            if (intent != null) {
+                mForecastUri = intent.getData();
+            }
+
+            if (mForecastUri != null) {
+                WeatherDbHelper weatherDbHelper = new WeatherDbHelper(getActivity());
+
+                Cursor cursor = getActivity().getContentResolver().query(
+                        mForecastUri, null, null, null, null
+                );
+
+                if (cursor != null) {
+
+                    cursor.moveToFirst();
+                    String weatherStr = "";
+
+                    int dateIndex = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE);
+                    int weatherIndex = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC);
+                    int maxTempIndex = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP);
+                    int minTempIndex = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP);
+
+                    weatherStr = Utility.formatDate(cursor.getLong(dateIndex)) + " || "
+                            + cursor.getString(weatherIndex) + " || "
+                            + cursor.getString(maxTempIndex) + " / "
+                            + cursor.getString(minTempIndex);
+
+                    ((TextView) rootView.findViewById(R.id.detail_text)).setText(weatherStr);
+                }
             }
 
             return rootView;
@@ -95,7 +127,7 @@ public class DetailActivity extends AppCompatActivity {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET); // 리셋해줌
             shareIntent.setType("text/plain"); // 일반 글자
-            shareIntent.putExtra(Intent.EXTRA_TEXT, mForecastStr + FORECAST_SHARE_HASHTAG);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, mForecastUri + FORECAST_SHARE_HASHTAG);
             return shareIntent;
         }
     }
