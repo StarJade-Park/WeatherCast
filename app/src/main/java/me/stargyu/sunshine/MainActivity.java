@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,6 +18,8 @@ import android.view.View;
 public class MainActivity extends AppCompatActivity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    private String mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String location = Utility.getPreferredLocation(this);
+
+        if (mLocation != null && !location.equals(mLocation)){
+            Fragment fragment = getVisibleFragment();
+
+            if(fragment instanceof ForecastFragment){
+                ((ForecastFragment) fragment).onLocationChanged();
+            }
+            mLocation = location;
+        }
+    }
+
+    public Fragment getVisibleFragment() {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()){
+            if(fragment.isVisible()){
+                return fragment;
+            }
+        }
+        return null;
     }
 
     private void openPreferredLocationInMap() {

@@ -137,13 +137,6 @@ public class ForecastFragment extends Fragment
         return rootView;
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateWeather();
-    }
-
     public static double getMaxTemperatureForDay(String weatherJsonStr, int dayIndex)
             throws JSONException {
         JSONObject weather = new JSONObject(weatherJsonStr);
@@ -160,7 +153,11 @@ public class ForecastFragment extends Fragment
         String location = Utility.getPreferredLocation(getActivity());
 
         fetchWeatherTask.execute(location); // excute만 부르면 내부에서 파이프라인 단계 거침
+    }
 
+    void onLocationChanged() {
+        updateWeather();
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
     @Override
