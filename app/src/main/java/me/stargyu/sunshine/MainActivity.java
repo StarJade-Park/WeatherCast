@@ -1,29 +1,43 @@
 package me.stargyu.sunshine;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
     private String mLocation;
+
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (findViewById(R.id.weather_detail_container) != null) {
+            mTwoPane = true;
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
@@ -63,22 +77,21 @@ public class MainActivity extends AppCompatActivity {
         String location = Utility.getPreferredLocation(this);
 
         if (mLocation != null && !location.equals(mLocation)) {
-            Fragment fragment = getVisibleFragment();
+            ForecastFragment fragment =
+                    (ForecastFragment) getSupportFragmentManager().findFragmentById(
+                            R.id.fragment_forecast);
 
-            if (fragment instanceof ForecastFragment) {
-                ((ForecastFragment) fragment).onLocationChanged();
+            if (fragment != null) {
+                fragment.onLocationChanged();
             }
             mLocation = location;
         }
-    }
 
-    public Fragment getVisibleFragment() {
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment.isVisible()) {
-                return fragment;
-            }
+        DetailFragment detailFragment =
+                (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+        if (detailFragment != null) {
+            detailFragment.onLocationChanged(location);
         }
-        return null;
     }
 
     private void openPreferredLocationInMap() {
@@ -98,6 +111,25 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             Log.d(LOG_TAG, "Couldn't call" + location + ", no receiving apps installed!");
+        }
+    }
+
+    @Override
+    public void onItemSelected(Uri contentUri) {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
         }
     }
 }

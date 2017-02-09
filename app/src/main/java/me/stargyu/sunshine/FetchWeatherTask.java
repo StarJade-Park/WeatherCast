@@ -92,7 +92,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         final String OWM_LONGITUDE = "lon";
 
         // Weather information.  Each day's forecast info is an element of the "list" array.
-        final String OWM_LIST = "List";
+        final String OWM_LIST = "list";
 
         final String OWM_PRESSURE = "pressure";
         final String OWM_HUMIDITY = "humidity";

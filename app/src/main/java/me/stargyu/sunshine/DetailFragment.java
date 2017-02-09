@@ -2,6 +2,7 @@ package me.stargyu.sunshine;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,10 @@ public class DetailFragment extends Fragment
 
     private ShareActionProvider mShareActionProvider;
     private String mForecastStr;
+
+    static final String DETAIL_URI = "URI";
+
+    private Uri mUri;
 
     private TextView mDayView;
     private TextView mDateView;
@@ -93,7 +98,13 @@ public class DetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
         mDayView = (TextView) rootView.findViewById(R.id.detail_day_textview);
         mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
         mHighTempView = (TextView) rootView.findViewById(R.id.detail_high_textview);
@@ -103,6 +114,7 @@ public class DetailFragment extends Fragment
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+
         return rootView;
     }
 
@@ -122,20 +134,17 @@ public class DetailFragment extends Fragment
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
-
-        if (intent == null) {
-            return null;
+        if (mUri != null) {
+            return new CursorLoader(
+                    getActivity(),
+                    mUri,
+                    DETAIL_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
         }
-
-        return new CursorLoader(
-                getActivity(),
-                intent.getData(),
-                DETAIL_COLUMNS,
-                null,
-                null,
-                null
-        );
+        return null;
     }
 
     @Override
@@ -200,5 +209,15 @@ public class DetailFragment extends Fragment
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    void onLocationChanged(String newLocation) {
+        Uri uri = mUri;
+        if (null != uri) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updatedUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
     }
 }
