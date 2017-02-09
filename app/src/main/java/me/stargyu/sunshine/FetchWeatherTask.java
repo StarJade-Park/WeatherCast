@@ -85,6 +85,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         final String OWM_CITY = "city";
         final String OWM_CITY_NAME = "name";
         final String OWM_COORD = "coord";
+        // open weather api 문제시 확인
 
         // Location coordinate
         final String OWM_LATITUDE = "lat";
@@ -117,6 +118,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
             double cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
             double cityLongitude = cityCoord.getDouble(OWM_LONGITUDE);
+//            double cityLatitude = cityJson.getDouble(OWM_LATITUDE);
+//            double cityLongitude = cityJson.getDouble(OWM_LONGITUDE);
 
             long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
 
@@ -248,6 +251,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 return null;
             }
             forecastJsonStr = buffer.toString();
+//            Log.v(LOG_TAG, "url: " + builtUri);
+//            Log.v(LOG_TAG, "forecast: " + forecastJsonStr);
             getWeatherDataFromJson(forecastJsonStr, locationQuery);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
