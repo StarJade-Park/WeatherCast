@@ -45,7 +45,7 @@ public class DetailFragment extends Fragment
     private TextView mPressureView;
 
     private static final String[] DETAIL_COLUMNS = {
-            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
             WeatherContract.WeatherEntry.COLUMN_DATE,
             WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
             WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
@@ -166,6 +166,7 @@ public class DetailFragment extends Fragment
 
         // weather icon
         int weatherId = data.getInt(COL_WEATHER_ID);
+        mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
         // weather description
         String weatherDescription =

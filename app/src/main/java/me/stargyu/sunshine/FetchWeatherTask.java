@@ -92,7 +92,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         final String OWM_LONGITUDE = "lon";
 
         // Weather information.  Each day's forecast info is an element of the "list" array.
-        final String OWM_LIST = "list";
+        final String OWM_LIST = "List";
 
         final String OWM_PRESSURE = "pressure";
         final String OWM_HUMIDITY = "humidity";
@@ -181,10 +181,10 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
             int inserted = 0;
             if (cVVector.size() > 0) {
-                ContentValues[] cvArrary = new ContentValues[cVVector.size()];
-                cVVector.toArray(cvArrary);
+                ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                cVVector.toArray(cvArray);
                 inserted = mContext.getContentResolver()
-                        .bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArrary);
+                        .bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
             }
 
             Log.d(LOG_TAG, "getWeatherDataFromJson: " + inserted + " inserted");

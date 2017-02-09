@@ -56,22 +56,6 @@ public class ForecastFragment extends Fragment
             WeatherContract.LocationEntry.COLUMN_COORD_LAT,
             WeatherContract.LocationEntry.COLUMN_COORD_LONG
     };
-    // 내가 사용하는 곳(사용처에 맞추기 위해서)에 정의한다.
-    // getColumn 하기 싫다?
-    // 재사용성이 적으니 따로 클래스로 분리하지 않는다.
-
-    /*
-    구조
-    ForecastFragment
-        ㄴForecastAdapter
-        ㄴ...
-    종속성
-    ForecastFragment
-        ㄴForecastAdapter
-        ㄴFetchWeatherAdapter
-        ㄴ...
-    */
-
 
     ForecastAdapter mForecastAdapter;
 
