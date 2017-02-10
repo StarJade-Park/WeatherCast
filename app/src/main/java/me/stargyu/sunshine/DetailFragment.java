@@ -83,12 +83,9 @@ public class DetailFragment extends Fragment
 
         mShareActionProvider =
                 (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-        // 버튼 찾듯이
-        // 인텐트 = 통로,행동
 
-        if (mForecastStr != null) { // 내용이 없는데 공유하지 말자
+        if (mForecastStr != null) { // 내용이 없는 경우 공유 방지
             mShareActionProvider.setShareIntent(createShareForecastIntent());
-            // 리스너 붙이듯 액션(인텐트)를 붙여준다
         } else {
             Log.d(LOG_TAG, "Share Action Provider is null");
         }
@@ -98,9 +95,10 @@ public class DetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle arguments = getArguments();
+        Bundle arguments = getArguments(); // bundle가져옴, ???에 있는 argument를 가져온다
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+            // argument의 DetailFragment.DETAIL_URI(key임)를 찾아서 value를 가져옴
         }
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
@@ -134,7 +132,7 @@ public class DetailFragment extends Fragment
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (mUri != null) {
+        if (mUri != null) { // mUri는 onCreateView에서 bundle로 가져온 uri
             return new CursorLoader(
                     getActivity(),
                     mUri,
@@ -213,7 +211,7 @@ public class DetailFragment extends Fragment
 
     void onLocationChanged(String newLocation) {
         Uri uri = mUri;
-        if (null != uri) {
+        if (null != uri) { // ??? uri가 생성되있음(location값만 바꿀 것임)
             long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
             Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
             mUri = updatedUri;

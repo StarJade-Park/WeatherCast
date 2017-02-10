@@ -106,10 +106,10 @@ public class ForecastFragment extends Fragment
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                 // 위치 가져오기, 몇번째 item?
 
-                if (cursor != null) {
+                if (cursor != null) { // ???
                     String locationSetting = Utility.getPreferredLocation(getActivity());
-                    ((Callback)getActivity())
-                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                    ((Callback)getActivity()).onItemSelected(
+                            WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
                                     locationSetting, cursor.getLong(COL_WEATHER_DATE)
                             ));
                 }
@@ -177,7 +177,7 @@ public class ForecastFragment extends Fragment
         mForecastAdapter.swapCursor(null);
     }
 
-    public interface Callback {
+    public interface Callback { // ??? callback 만들어줌
         public void onItemSelected(Uri dateUri);
     }
 }

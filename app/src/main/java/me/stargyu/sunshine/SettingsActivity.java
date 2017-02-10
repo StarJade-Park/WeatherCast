@@ -22,9 +22,6 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(
                 findPreference(getString(R.string.pref_units_key))); // 컨트렉트와 비교
     }
-    // contract는 DB의 scheme와 비슷하게 볼 것
-    // 데이터 접근을 편하게, 값을 지정하는 것
-    // intent, preference
 
     private void bindPreferenceSummaryToValue(Preference preference) {
         preference.setOnPreferenceChangeListener(this);
