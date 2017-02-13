@@ -37,12 +37,11 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                         .commit();
             }
         } else {
+            getSupportActionBar().setElevation(0f);
             mTwoPane = false;
         }
 
         forecastFragment.setUseTodayLayout(!mTwoPane);
-
-        getSupportActionBar().setElevation(0f);
     }
 
     @Override

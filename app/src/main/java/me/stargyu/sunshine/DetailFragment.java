@@ -202,6 +202,8 @@ public class DetailFragment extends Fragment
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());
         }
+
+        mIconView.setContentDescription(weatherDescription);
     }
 
     @Override

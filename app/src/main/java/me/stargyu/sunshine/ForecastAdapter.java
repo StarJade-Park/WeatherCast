@@ -112,6 +112,8 @@ public class ForecastAdapter extends CursorAdapter {
 
         double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
         viewHolder.lowTempView.setText(Utility.formatTemperature(context, low, isMetric));
+
+        viewHolder.iconView.setContentDescription(description);
     }
 
     // ViewHolder를 만든 이유?

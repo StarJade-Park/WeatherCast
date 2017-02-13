@@ -132,9 +132,10 @@ public class ForecastFragment extends Fragment
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
 
-        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout); // today layout 사용 정함
         return rootView;
     }
+
 
     public static double getMaxTemperatureForDay(String weatherJsonStr, int dayIndex)
             throws JSONException {
@@ -206,9 +207,15 @@ public class ForecastFragment extends Fragment
         mForecastAdapter.swapCursor(null);
     }
 
+    // 왜 adapter에서도 쓰고 프래그먼트에서도 쓰는가?
+    // 라이프 사이클의 이해
     public void setUseTodayLayout(boolean useTodayLayout) {
         mUseTodayLayout = useTodayLayout;
-        if (mForecastAdapter != null) {
+        // 프래그먼트 생성 - 기본 값(false) 어댑터 선언, 설정
+        // - main에서 기기 종류 판별 - 판별 값을 어댑터로 넘겨줌
+        // (어댑터한테 핸드폰인지 테블릿인지 알려주는거임)
+        // - 어댑터는 이것을 가지고 new, bind 작업을 함
+        if (mForecastAdapter != null) { // loader reset 후의 상황 가드
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         }
     }
