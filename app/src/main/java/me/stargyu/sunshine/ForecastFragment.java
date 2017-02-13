@@ -107,7 +107,7 @@ public class ForecastFragment extends Fragment
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false); // 붙이다
-        mListView = (ListView) rootView.findViewById(R.id.list_view_forecast);
+        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         mListView.setAdapter(mForecastAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
