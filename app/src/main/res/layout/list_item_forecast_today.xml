@@ -3,6 +3,7 @@
               android:id="@+id/list_item_forecast_today"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@drawable/touch_selector"
               android:minHeight="?android:attr/listPreferredItemHeight"
               android:orientation="horizontal"
               android:padding="16dp">

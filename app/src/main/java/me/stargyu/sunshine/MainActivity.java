@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +25,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_forecast));
+
         if (findViewById(R.id.weather_detail_container) != null) {
             mTwoPane = true;
 
@@ -38,8 +40,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             mTwoPane = false;
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        getSupportActionBar().setElevation(0f);
     }
 
     @Override

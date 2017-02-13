@@ -1,6 +1,7 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name">Sunshine</string>
-    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_detail">Detail</string>
+    <string name="title_settings">Settings</string>
 
     <!-- Action List -->
     <string name="action_settings">Settings</string>
