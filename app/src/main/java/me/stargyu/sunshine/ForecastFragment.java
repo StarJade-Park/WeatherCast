@@ -1,5 +1,6 @@
 package me.stargyu.sunshine;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,8 +85,12 @@ public class ForecastFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_refresh) {
-            updateWeather();
+//        if (id == R.id.action_refresh) {
+//            updateWeather();
+//            return true;
+//        }
+        if(id == R.id.action_map){
+            openPreferredLocationInMap();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -205,4 +211,28 @@ public class ForecastFragment extends Fragment
     public interface Callback { // ??? callback 만들어줌
         public void onItemSelected(Uri dateUri);
     }
+
+    private void openPreferredLocationInMap() {
+        if ( null != mForecastAdapter ) {
+            Cursor c = mForecastAdapter.getCursor();
+
+            if ( null != c ) {
+                c.moveToPosition(0);
+
+                String posLat = c.getString(COL_COORD_LAT);
+                String posLong = c.getString(COL_COORD_LONG);
+                Uri geoLocation = Uri.parse("geo:" + posLat + "," + posLong);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call" + geoLocation.toString() + ", no receiving apps installed!");
+                }
+            }
+        }
+    }
+
 }

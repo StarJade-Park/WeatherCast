@@ -46,6 +46,8 @@
             android:authorities="@string/content_authority"
             android:exported="false"
             android:syncable="true"/>
+        <!-- sync 걸면 db는 알아서 열고 닫힘 -->
+        <!-- 명시적으로 close할 필요가 없다 -->
 
         <!--<service android:name=".service.SunshineService"/>-->
         <!--<receiver-->

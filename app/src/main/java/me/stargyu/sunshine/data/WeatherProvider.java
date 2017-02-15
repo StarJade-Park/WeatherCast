@@ -243,7 +243,6 @@ public class WeatherProvider extends ContentProvider {
         }
         getContext().getContentResolver().notifyChange(uri, null); // 상위 정보 전달(uri)
 
-        db.close();
         return returnUri; // 하위 정보
     }
 
@@ -276,7 +275,6 @@ public class WeatherProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null); // 상위 정보 전달(uri)
         }
 
-        db.close();
         return _id; // 하위 정보
     }
 
@@ -316,7 +314,6 @@ public class WeatherProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null); // 상위 정보 전달(uri)
         }
 
-        db.close();
         return _id;
     }
 
