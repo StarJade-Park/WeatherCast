@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import me.stargyu.sunshine.sync.SunshineSyncAdapter;
+
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mLocation = Utility.getPreferredLocation(this);
 
         ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         }
 
         forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -78,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
         String location = Utility.getPreferredLocation(this);
 
+//        Log.e(LOG_TAG, "onResume: " + mLocation);
+//        Log.e(LOG_TAG, "onResume: " + location);
         if (mLocation != null && !location.equals(mLocation)) {
             ForecastFragment fragment =
                     (ForecastFragment) getSupportFragmentManager().findFragmentById(

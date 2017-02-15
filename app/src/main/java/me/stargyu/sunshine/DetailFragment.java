@@ -166,11 +166,11 @@ public class DetailFragment extends Fragment
         // temp
         boolean isMetric = Utility.isMetric(getActivity());
         String high = Utility.formatTemperature(
-                getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
+                getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP));
         mHighTempView.setText(high);
 
         String low = Utility.formatTemperature(
-                getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+                getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP));
         mLowTempView.setText(low);
 
         // weather icon

@@ -109,6 +109,7 @@
                 android:textAppearance="?android:textAppearanceLarge"/>
         </LinearLayout>
 
+        <!-- framelayout으로 감싸서 배경이미지 추가할 것 -->
         <me.stargyu.sunshine.CompassView
             android:id="@+id/detail_wind_compass"
             android:layout_marginTop="16dp"

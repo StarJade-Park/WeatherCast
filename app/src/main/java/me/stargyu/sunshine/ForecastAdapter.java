@@ -37,8 +37,8 @@ public class ForecastAdapter extends CursorAdapter {
 
     private String formatHighLows(double high, double low) {
         boolean isMetric = Utility.isMetric(mContext);
-        String highLowStr = Utility.formatTemperature(high, isMetric) +
-                "/" + Utility.formatTemperature(low, isMetric);
+        String highLowStr = Utility.formatTemperature(mContext, high) +
+                "/" + Utility.formatTemperature(mContext, low);
         return highLowStr;
     }
 
@@ -108,15 +108,16 @@ public class ForecastAdapter extends CursorAdapter {
         boolean isMetric = Utility.isMetric(context);
 
         double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
-        viewHolder.highTempView.setText(Utility.formatTemperature(context, high, isMetric));
+        viewHolder.highTempView.setText(Utility.formatTemperature(context, high));
 
         double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
-        viewHolder.lowTempView.setText(Utility.formatTemperature(context, low, isMetric));
+        viewHolder.lowTempView.setText(Utility.formatTemperature(context, low));
 
         viewHolder.iconView.setContentDescription(description);
     }
 
     // ViewHolder를 만든 이유?
+    // view를 매번 호출하기 싫어서(id 찾는 과정 줄일려고)
     public static class ViewHolder {
         public final ImageView iconView;
         public final TextView dateView;
