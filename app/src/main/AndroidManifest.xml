@@ -41,6 +41,12 @@
         <provider
             android:name=".data.WeatherProvider"
             android:authorities="me.stargyu.sunshine.app"/>
+
+        <service android:name=".service.SunshineService"/>
+        <receiver
+            android:name=".service.SunshineService$AlarmReceiver"
+            android:enabled="true"/>
+
     </application>
 
 </manifest>

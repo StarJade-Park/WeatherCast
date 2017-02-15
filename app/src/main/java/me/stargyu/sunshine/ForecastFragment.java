@@ -1,5 +1,9 @@
 package me.stargyu.sunshine;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,11 +21,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import me.stargyu.sunshine.data.WeatherContract;
+import me.stargyu.sunshine.service.SunshineService;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -136,23 +137,22 @@ public class ForecastFragment extends Fragment
         return rootView;
     }
 
-
-    public static double getMaxTemperatureForDay(String weatherJsonStr, int dayIndex)
-            throws JSONException {
-        JSONObject weather = new JSONObject(weatherJsonStr);
-        JSONArray days = weather.getJSONArray("list");
-        JSONObject dayInfo = days.getJSONObject(dayIndex);
-        JSONObject temperatureInfo = dayInfo.getJSONObject("temp");
-
-        return temperatureInfo.getDouble("max");
-    }
-
     private void updateWeather() {
-        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask(getActivity());
+        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+                Utility.getPreferredLocation(getActivity()));
 
-        String location = Utility.getPreferredLocation(getActivity());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                getActivity(),
+                0,
+                alarmIntent,
+                PendingIntent.FLAG_ONE_SHOT
+        );
 
-        fetchWeatherTask.execute(location); // excute만 부르면 내부에서 파이프라인 단계 거침
+        AlarmManager alarmManager =
+                (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pendingIntent);
     }
 
     void onLocationChanged() {

@@ -48,6 +48,7 @@ public class DetailFragment extends Fragment
     private TextView mHumidityView;
     private TextView mWindView;
     private TextView mPressureView;
+    private CompassView mCompassView;
 
     private static final String[] DETAIL_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
@@ -112,6 +113,7 @@ public class DetailFragment extends Fragment
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+        mCompassView = (CompassView) rootView.findViewById(R.id.detail_wind_compass);
 
         return rootView;
     }
@@ -204,6 +206,8 @@ public class DetailFragment extends Fragment
         }
 
         mIconView.setContentDescription(weatherDescription);
+
+        mCompassView.setRotation(data.getFloat(COL_WEATHER_DEGREES));
     }
 
     @Override
